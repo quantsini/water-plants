@@ -11,7 +11,7 @@ def boot():
 	import webrepl
 	import wifi
 
-	#esp.osdebug(None)
+	esp.osdebug(None)
 
 	print('Wifi...')
 	try:
