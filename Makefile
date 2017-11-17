@@ -1,7 +1,7 @@
 SRC_DIR := ./src
 BUILD_DIR := ./build
-MPYC_FLAGS := -O3
-TTY_DEVICE := /dev/cu.wchusbserial1420
+MPYC_FLAGS := 
+TTY_DEVICE := /dev/cu.wchusbserial14610
 
 SRC_LIST := $(wildcard $(SRC_DIR)/*.py)
 BUILD_LIST := $(patsubst $(SRC_DIR)/%.py, $(BUILD_DIR)/%.mpy, $(SRC_LIST))
