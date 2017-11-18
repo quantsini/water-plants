@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Adapted from https://pypi.python.org/pypi/ntplib/
 """
 

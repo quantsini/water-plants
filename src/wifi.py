@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import network
 import time
 from micropython import const

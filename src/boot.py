@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import machine
 machine.Pin(2, machine.Pin.OUT).value(0)
 machine.Pin(0, machine.Pin.OUT).value(0)

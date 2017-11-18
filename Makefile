@@ -9,8 +9,6 @@ BUILD_LIST := $(patsubst $(SRC_DIR)/%.py, $(BUILD_DIR)/%.mpy, $(SRC_LIST))
 .PHONY: all upload clean
 
 all: $(BUILD_DIR) $(BUILD_LIST)
-	cp src/boot.py build/boot.py
-	rm build/boot.mpy
 
 $(BUILD_LIST): $(SRC_LIST)
 	./bin/mpy-cross $< -o $@ $(MPYC_FLAGS)
@@ -18,11 +16,14 @@ $(BUILD_LIST): $(SRC_LIST)
 $(BUILD_DIR):
 	mkdir -p $@
 
-upload: all venv
-	. venv/bin/activate ; cd build ; mpy-sync --port $(TTY_DEVICE)
+mpy-sync: all venv
+	. venv/bin/activate ; cd $(BUILD_DIR) ; mpy-sync --port $(TTY_DEVICE)
+
+py-sync: all venv
+	. venv/bin/activate ; cd $(SRC_DIR) ; mpy-sync --port $(TTY_DEVICE)
 
 clean:
-	rm -rf build
+	rm -rf $(BUILD_DIR)
 
 venv:
 	virtualenv venv --python=python3
