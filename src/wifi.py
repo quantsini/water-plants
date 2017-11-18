@@ -1,17 +1,18 @@
 import network
 import time
+from micropython import const
 
 __all__ = ['connect']
 
 
-timeout = 20 # seconds
-poll_rate = 2 # seconds
+_timeout = const(20) # seconds
+_poll_rate = const(2) # seconds
 
 
 class CannotConnectToWifi(Exception): pass
 
 
-def connect(ssid, key):
+def connect(ssid: str, key: str) -> None:
     sta_if = network.WLAN(network.STA_IF)
     if not sta_if.isconnected():
         sta_if.active(True)
@@ -19,7 +20,7 @@ def connect(ssid, key):
         start = time.time()
         while not sta_if.isconnected():
             print("Retrying")
-            time.sleep(poll_rate)
+            time.sleep(_poll_rate)
             now = time.time()
-            if now - start > timeout:
+            if now - start > _timeout:
                 raise CannotConnectToWifi()

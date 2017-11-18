@@ -7,7 +7,7 @@ import untplib
 
 # machine.RTC().datetime has/expects format:
 # (year, month, day, weekday, hours, minutes, seconds, subseconds)
-def synchronize():
+def synchronize() -> None:
     response = untplib.request('us.pool.ntp.org')
     rtc = machine.RTC()
     year, month, day, hour, minute, second, weekday, yearday = time.localtime(time.time() + int(response.offset))

@@ -5,6 +5,7 @@ import socket
 import ustruct as struct
 import time
 from ucollections import namedtuple
+from micropython import const
 
 
 __all__ = ['request']
@@ -13,14 +14,14 @@ __all__ = ['request']
 # Epoch
 # ESP8266:  2000-01-01 00:00:00 UTC
 # NTP: 1900-01-01 00:00:00 UTC
-NTP_DELTA = 3155673600
+_NTP_DELTA = const(3155673600)
 _PACKET_FORMAT = "!BBBb11I"
 
 
 _to_frac = lambda timestamp, n=32: int(abs(timestamp - int(timestamp)) * 2**n)
 _to_time = lambda integ, frac, n=32: integ + float(frac)/2**n
-ntp_to_system_time = lambda timestamp: timestamp - NTP_DELTA
-system_to_ntp_time = lambda timestamp: timestamp + NTP_DELTA
+ntp_to_system_time = lambda timestamp: timestamp - _NTP_DELTA
+system_to_ntp_time = lambda timestamp: timestamp + _NTP_DELTA
 
 
 class NTPPacket(namedtuple(
@@ -29,44 +30,44 @@ class NTPPacket(namedtuple(
 )):
 
     @property
-    def offset(self):
+    def offset(self) -> float:
         """offset"""
         return ((self.recv_timestamp - self.orig_timestamp) +
                 (self.tx_timestamp - self.dest_timestamp))/2
 
     @property
-    def delay(self):
+    def delay(self) -> float:
         """round-trip delay"""
         return ((self.dest_timestamp - self.orig_timestamp) -
                 (self.tx_timestamp - self.recv_timestamp))
 
     @property
-    def tx_time(self):
+    def tx_time(self) -> float:
         """Transmit timestamp in system time."""
         return ntp_to_system_time(self.tx_timestamp)
 
     @property
-    def recv_time(self):
+    def recv_time(self) -> float:
         """Receive timestamp in system time."""
         return ntp_to_system_time(self.recv_timestamp)
 
     @property
-    def orig_time(self):
+    def orig_time(self) -> float:
         """Originate timestamp in system time."""
         return ntp_to_system_time(self.orig_timestamp)
 
     @property
-    def ref_time(self):
+    def ref_time(self) -> float:
         """Reference timestamp in system time."""
         return ntp_to_system_time(self.ref_timestamp)
 
     @property
-    def dest_time(self):
+    def dest_time(self) -> float:
         """Destination timestamp in system time."""
         return ntp_to_system_time(self.dest_timestamp)
 
 
-def request(host, version=3, port=123, timeout=5):
+def request(host: str, version: int = 3, port: int = 123, timeout: int = 5) -> NTPPacket:
     """Query a NTP server.
 
     Parameters:
